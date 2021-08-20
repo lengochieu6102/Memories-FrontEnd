@@ -4,7 +4,7 @@ import useStyles from './styles';
 import memories from '../../images/memories.png';
 import {Link,useHistory,useLocation} from 'react-router-dom';
 import {useDispatch} from 'react-redux';
-import decode from 'jwt-decode';
+
 
 function Navbar(props) {
     const classes = useStyles();
@@ -13,22 +13,19 @@ function Navbar(props) {
     const history=useHistory();
     const location = useLocation();
 
-    useEffect(()=>{
-        const token=user?.token;
-        if(token){
-            const decodedToken = decode(token);
-            if(decodedToken.exp * 1000 < new Date().getTime()) handleLogout();
-        }
-        setUser(JSON.parse(localStorage.getItem('profile')));
-    },[location,user?.token])
-
-    function handleLogout() {
+    const handleLogout=()=> {
         dispatch({
             type:'LOGOUT',
         })
         history.push('/');
         setUser(null);
     }
+
+    useEffect(()=>{
+        setUser(JSON.parse(localStorage.getItem('profile')));
+    },[location,user?.token])
+
+   
 
     return (
         <div>
